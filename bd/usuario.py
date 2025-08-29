@@ -2,21 +2,16 @@ from conexao import conecta_db
 import bcrypt
 
 
-def login(conexao, login,senha) -> bool:
+def login_bd(conexao, login,senha) -> bool:
     cursor = conexao.cursor()
-    sql_listar = """ select id, login, admin  from  usuario 
-                    where login = %s and senha = %s     
-                 """
-    dados = (login,senha)
-    cursor.execute(sql_listar, dados)
+    cursor.execute(" select id,login,senha from usuario"+
+                   " where login = '" + login+ "'", '"' + senha+ "'")
     registro = cursor.fetchone()
 
-    if  registro is None:
-        print("Usuario e senhas inválidos:")
-        return False
-    else:
-        admin = registro[2]
+    if  registro:
         return True
+    else:
+        return False
 
 
 def listar_usuarios_bd(conexao):
